@@ -1,28 +1,35 @@
-<script setup></script>
+<script setup>
+  import router from '@/router';
+  const props = defineProps({
+    pageTitle: {
+      type: String,
+      required: true
+    }
+  });
 
+  const backToPage = () => {
+    router.go('-1');
+  }
+</script>
 <template>
-  <div class="flex items-baseline justify-between border-b border-[#c5a1a1] pb-8 pt-24">
-    <h1 class="text-4xl font-bold tracking-tight text-[#d57d1f]">Meals By Area</h1>
+  <div class="mt-24">
+    <button @click="backToPage" type="button">
+      <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5H1m0 0 4 4M1 5l4-4"></path>
+      </svg>
+    </button>
 
-    <div class="flex items-center">
+  </div>
+  <div class="flex items-center justify-between border-b border-[#c5a1a1] pb-8 pt-6">
+    <h1 class="text-4xl font-bold tracking-tight text-[#d57d1f]">{{ props.pageTitle }}</h1>
+
+    <!-- <div class="flex items-center">
       <div class="relative inline-block text-left">
-        <div>
-          <button type="button" class="group inline-flex justify-center text-sm font-medium text-white hover:text-gray-300" id="menu-button">
-            Sort
-            <svg class="-mr-1 ml-1 h-5 w-5 shrink-0 text-white group-hover:text-gray-300" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
-              <path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
-            </svg>
-          </button>
-        </div>
-
-        <div class="absolute right-0 z-10 mt-2 w-40 origin-top-right rounded-md bg-white shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
-          <!-- <div class="py-1" role="none">
-            <a href="#" class="block px-4 py-2 text-sm font-medium text-gray-900" role="menuitem" tabindex="-1" id="menu-item-0">Area</a>
-            <a href="#" class="block px-4 py-2 text-sm text-gray-500" role="menuitem" tabindex="-1" id="menu-item-1">Categories</a>
-            <a href="#" class="block px-4 py-2 text-sm text-gray-500" role="menuitem" tabindex="-1" id="menu-item-2">Ingredients</a>
-          </div> -->
-        </div>
+        <input
+        type="text" name="search-meal" id="search-meal"
+        class="block w-full rounded-md border-0 pl-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
+        placeholder="Search">
       </div>
-    </div>
+    </div> -->
   </div>
 </template>

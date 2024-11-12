@@ -4,13 +4,10 @@
   import axios from 'axios';
 
   const router = useRouter();
-
   const redirectToArea = (area_id) => {
     area_id = area_id.target.dataset.area;
     router.push({name: 'area-view', params: { area_id } });
   }
-
-
   let config = {};
   const mealsByArea = ref('');
 
@@ -29,7 +26,6 @@
     });
     return mealsByArea;
   }
-
   onMounted(() => {
     getMealsByArea();
   });
