@@ -1,5 +1,5 @@
 <script setup>
-  import { ref, onMounted } from 'vue';
+  import { ref, onMounted, watch } from 'vue';
   import { useRoute } from 'vue-router';
   import axios from 'axios';
   import MealHeader from '@/components/MealHeader.vue';
@@ -10,8 +10,10 @@
   const popup = ref(false);
   const popUpMeal = ref(null);
   const popUpImg = ref(null);
+  const searchByArea = ref();
+  const mealsLabel = ref();
 
-  const getMealByArea = () => {
+  const getMealByArea = (areaId) => {
     let config = {
       method: 'get',
       url: `https://www.themealdb.com/api/json/v1/1/filter.php?a=${areaId}`,
@@ -20,7 +22,6 @@
       axios.request(config)
       .then((response) => {
         mealByArea.value = response.data.meals;
-        // console.log(response.data.meals)
       })
       .catch((error) => {
         console.log(error);
@@ -28,6 +29,10 @@
     }
 
     return mealByArea;
+  }
+  const searchResult = (searchKeyword) => {
+    searchByArea.value = searchKeyword
+    return searchKeyword
   }
   const getMealPopup = (e) => {
     popUpMeal.value = e.target.dataset.meal
@@ -38,12 +43,21 @@
     popup.value = false;
   }
   onMounted(() => {
-    getMealByArea();
+    if(areaId.length > 0){
+      getMealByArea(areaId);
+      mealsLabel.value = areaId
+    }
   });
-
+  watch(searchByArea, (newSearchResult) => {
+    // console.log(newSearchResult);
+    if(newSearchResult){
+      getMealByArea(newSearchResult);
+      mealsLabel.value = newSearchResult
+    }
+  });
 </script>
 <template>
-  <MealHeader :page-title="`${areaId} Meals`" />
+  <MealHeader @search="searchResult" :page-title="`${mealsLabel} Meals`" back-btn />
   <div class="grid grid-cols-4 gap-6 py-8">
     <div @click="getMealPopup" v-for="meal in mealByArea" :key="meal.id">
       <div>
