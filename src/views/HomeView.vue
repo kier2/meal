@@ -40,7 +40,7 @@
 
   <section class="pb-24 pt-6">
     <div class="w-full mt-4">
-      <div class="grid grid-cols-5 gap-3">
+      <div class="grid md:grid-cols-2 lg:grid-cols-5 gap-3">
         <button @click="redirectToArea"
           v-for="area in mealsByArea" :data-area="area.strArea" :key="area.id"
           type="button"

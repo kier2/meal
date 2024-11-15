@@ -50,24 +50,32 @@
 </script>
 <template>
   <MealHeader @search="searchResult" :page-title="`${mealsLabel} Meals`" back-btn />
-  <div class="grid grid-cols-4 gap-6 py-8">
+  <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 py-8">
     <div v-for="meal in mealByArea"
       :key="meal.id"
-      class="rounded-md cursor-pointer w-full h-full"
+      class="rounded-md cursor-pointer w-full h-full bg-white"
       >
       <div>
         <img class="w-full h-auto object-cover rounded-t-md"
          :src="meal.strMealThumb"
          :alt="meal.strMeal" />
       </div>
-      <div class="p-4 bg-white flex justify-center rounded-b-md">
+      <div class="p-4 flex justify-center rounded-b-md">
         <div class="text-center">
-          <h4 class="text-[#d57d1f] font-semibold text-xl">
+          <h4 class="text-[#d57d1f] font-semibold text-xl mb-6">
             {{ meal.strMeal }}
           </h4>
           <RouterLink :to="`/area/meal/${meal.idMeal}`"
-          class="mt-4 text-sm font-semibold"
-          >View Recipe</RouterLink>
+          class="mt-4 text-sm font-semibold text-gray-600 flex items-center justify-center mb-2"
+          >
+            <span class="mr-1">
+              View Recipe
+            </span>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" class="text-gray-900 size-4 font-semibold">
+              <path strokeLinecap="round" strokeLinejoin="round" d="m5.25 4.5 7.5 7.5-7.5 7.5m6-15 7.5 7.5-7.5 7.5" />
+            </svg>
+
+          </RouterLink>
         </div>
       </div>
     </div>

@@ -43,7 +43,7 @@
       </svg>
     </button>
   </div>
-  <div class="flex items-center justify-between border-b border-[#c5a1a1] pb-8 pt-6">
+  <div class="flex flex-col lg:flex-row items-center justify-between border-b border-[#c5a1a1] pb-8 pt-6 gap-y-5">
     <h1 class="text-4xl font-bold tracking-tight text-[#d57d1f]">{{ props.pageTitle }}</h1>
     <div class="flex items-center">
       <div class="relative inline-block text-left">

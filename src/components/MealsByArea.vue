@@ -32,7 +32,7 @@
 </script>
 
 <template>
-  <div class="grid grid-cols-5 gap-3">
+  <div class="grid lg:grid-cols-5 gap-3">
     <button @click="redirectToArea"
       v-for="area in mealsByArea" :data-area="area.strArea" :key="area.id"
       type="button"
