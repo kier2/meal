@@ -19,13 +19,13 @@
     if(areaId){
       axios.request(config)
       .then((response) => {
-        mealByArea.value = response.data.meals;
+        (response.data.meals) ? mealByArea.value = response.data.meals : router.push({ name: 'not-found' });
       })
       .catch((error) => {
         console.log(error);
+        router.push({ name: 'not-found' });
       });
     }
-
     return mealByArea;
   }
 
@@ -74,7 +74,6 @@
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" class="text-gray-900 size-4 font-semibold">
               <path strokeLinecap="round" strokeLinejoin="round" d="m5.25 4.5 7.5 7.5-7.5 7.5m6-15 7.5 7.5-7.5 7.5" />
             </svg>
-
           </RouterLink>
         </div>
       </div>

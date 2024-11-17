@@ -1,8 +1,9 @@
 <script setup>
-import { useRoute, RouterLink } from 'vue-router';
+import { useRoute, useRouter, RouterLink } from 'vue-router';
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
-import router from '@/router';
+
+  const router = useRouter();
   const route = useRoute();
   const mealParamId = route.params.meal_id;
   const mealById = ref();
@@ -19,11 +20,17 @@ import router from '@/router';
     if(dataId){
       axios.request(config)
       .then((response) => {
-        mealById.value = response.data.meals;
-        getMealIngredients(response.data.meals)
+        if(response.data.meals){
+          mealById.value = response.data.meals;
+          // console.log(response.data.meals)
+          getMealIngredients(response.data.meals);
+        }else{
+          router.push({ name: 'not-found' });
+        }
       })
       .catch((error) => {
         console.log(error);
+        router.push({ name: 'not-found' });
       });
     }
     return mealById;
@@ -40,12 +47,7 @@ import router from '@/router';
     return ingredients;
   }
   onMounted(() => {
-    if(mealParamId > 0){
-      getMealById(mealParamId)
-      console.log(ingredients)
-    }else {
-      router.go(-1);
-    }
+    (mealParamId > 0) ? getMealById(mealParamId) : router.go(-1);
   })
 </script>
 
@@ -76,7 +78,6 @@ import router from '@/router';
                     </svg>
                     Tags:
                   </span>
-
                   <span> {{ mealById[0].strTags.split(',').join(', ') }} </span>
                 </div>
                 <div v-if="mealById[0].strCategory"
@@ -103,6 +104,18 @@ import router from '@/router';
                 </RouterLink>
               </div>
               <img :src="mealById[0].strMealThumb" alt="" class="mt-8 aspect-[6/5] w-full rounded-2xl bg-gray-50 object-cover lg:aspect-auto lg:h-[34.5rem]">
+
+              <div class="flex justify-center mt-6">
+                <a v-if="mealById[0].strSource"
+                :href="mealById[0].strSource"
+                class="rounded-md bg-[#d57d1f] px-8 py-3 text-md font-semibold text-white shadow-sm hover:bg-[#c5843e] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 cursor-pointer flex items-center gap-2"
+                target="_blank">
+                  <span>View Source</span>
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25 21 12m0 0-3.75 3.75M21 12H3" />
+                  </svg>
+                </a>
+              </div>
             </div>
             <div class="w-full lg:max-w-xl lg:flex-auto">
               <ul class="-my-8 divide-y divide-gray-100">
