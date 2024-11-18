@@ -33,8 +33,8 @@
     getMealsByArea();
   });
 
-</script>
 
+</script>
 <template>
   <MealHeader page-title="Meals By Area" />
 

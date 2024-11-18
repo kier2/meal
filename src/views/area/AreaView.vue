@@ -4,6 +4,7 @@
   import axios from 'axios';
   import MealHeader from '@/components/MealHeader.vue';
 
+
   const router = useRouter();
   const route = useRoute();
   const areaId = route.params.area_id;
