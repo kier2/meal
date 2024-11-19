@@ -1,5 +1,6 @@
 <script setup>
   import MealHeader from '@/components/MealHeader.vue';
+  import Footer from '@/components/FooterView.vue';
   import { ref, onMounted } from 'vue';
   import { useRouter } from 'vue-router';
   import axios from 'axios';
@@ -32,12 +33,9 @@
   onMounted(() => {
     getMealsByArea();
   });
-
-
 </script>
 <template>
   <MealHeader page-title="Meals By Area" />
-
   <section class="pb-24 pt-6">
     <div class="w-full mt-4">
       <div class="grid md:grid-cols-2 lg:grid-cols-5 gap-3">

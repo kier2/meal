@@ -14,30 +14,12 @@
   });
   let showClose = ref()
 
-  const emits = defineEmits(['search']);
-
-  const filterForm = reactive({ area: '', category: [] })
-
-  const mealSearch = async () => {
-    if(searchForm.input.length > 0){
-      const param = searchForm.input.trim()
-      const capitalizeParam = param.charAt(0).toUpperCase() + searchForm.input.slice(1)
-      const targetRoute =  { name: 'area-view', params: { area_id: capitalizeParam } }
-      const currentRoute = router.currentRoute.value;
-
-      emits('search', capitalizeParam);
-      searchForm.input = '';
-      if (currentRoute.name !== targetRoute.name || currentRoute.params.area_id !== targetRoute.params.area_id) {
-        await router.push(targetRoute); // Navigate to the new route
-      }else{
-        await router.replace(targetRoute);
-      }
-    }
-  }
+  const filterForm = reactive({ area: '', category: '' })
   let config = {
       method: 'get',
       url: ''
   };
+
   const getCategory = () => {
     config.url = `https://www.themealdb.com/api/json/v1/1/categories.php`
     axios.request(config)
@@ -72,20 +54,19 @@
         console.log(error);
       });
   }
-
   const showAction = () => {
    return showClose.value = (showClose.value) ? false : true;
   }
-
   const getSelectedFilter = async () => {
     if(filterForm.area == '' && filterForm.category == ''){
       alert("Filter can't be empty!");
-    }else {
-      console.log('Area: '+filterForm.area)
-      console.log('Category: '+filterForm.category)
+    }else if(filterForm.area){
+      router.push(`/filters/area/meal/${filterForm.area}`);
+    }else if(filterForm.category){
+      console.log(filterForm.category)
+      router.push(`/filters/category/meal/${filterForm.category}`);
     }
   }
-
   const filters = reactive({
     area: [],
     category: [],
@@ -95,7 +76,7 @@
   }
 </script>
 <template>
-  <div class="mt-24">
+  <div class="mt-10">
     <button @click="backToPage" type="button" v-if="backBtn">
       <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
       <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5H1m0 0 4 4M1 5l4-4"></path>
@@ -104,9 +85,9 @@
   </div>
   <div class="flex flex-col lg:flex-row items-center justify-between border-b border-[#c5a1a1] pb-8 pt-6 gap-y-5">
     <h1 class="text-4xl font-bold tracking-tight text-[#d57d1f]">{{ props.pageTitle }}</h1>
-    <form @submit.prevent="getSelectedFilter">
+    <form @submit.prevent="getSelectedFilter" method="post">
       <div class="flex items-center gap-3">
-        <button v-if="showClose" type="submit" class="inline-flex w-full justify-center rounded-md bg-[#d57d1f] px-6 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Search</button>
+        <button v-if="showClose" type="submit" class="inline-flex w-full justify-center rounded-md bg-[#d57d1f] px-6 py-2 text-sm font-semibold text-white shadow-sm hover:bg-[#c28d55] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Search</button>
         <div class="relative inline-block text-left">
             <!-- Filters -->
           <Disclosure as="section" aria-labelledby="filter-heading" class="grid items-center">
@@ -126,14 +107,14 @@
                   </div>
                 </div>
               </div>
-              <DisclosurePanel class="border-t border-gray-200 py-10 text bg-[#d4ac83] lg:absolute right-0 top-12 lg:w-[50rem] sm:w-[20rem] h-96 overflow-scroll overflow-x-hidden rounded z-50 shadow-md">
+              <DisclosurePanel v-show="showClose" class="border-t border-gray-200 py-10 text bg-[#d4ac83] lg:absolute right-0 top-12 lg:w-[50rem] sm:w-[20rem] h-96 overflow-scroll overflow-x-hidden rounded z-50 shadow-md">
                 <div class="mx-auto grid max-w-7xl grid-cols-2 gap-x-4 px-4 text-sm sm:px-6 md:gap-x-6 lg:px-8 bg-[#2d2013 w-full">
                   <div class="grid auto-rows-min grid-cols-1 gap-y-10 md:grid-cols-2 md:gap-x-6">
                     <fieldset>
                       <legend class="block font-medium">Area</legend>
                       <div class="space-y-6 pt-6 sm:space-y-4 sm:pt-4">
                         <div v-for="(option, optionIdx) in filters.area" :key="option.value" class="flex items-center text-base sm:text-sm">
-                          <input v-model="filterForm.area" :id="`price-${optionIdx}`" name="price[]" :value="option.value" type="radio" class="size-4 shrink-0 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" :checked="option.checked" />
+                          <input v-model="filterForm.area" :id="`price-${optionIdx}`" name="filter" :value="option.value" type="radio" class="size-4 shrink-0 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" :checked="option.checked" />
                           <label :for="`price-${optionIdx}`" class="ml-3 min-w-0 flex-1 text-gray-900">{{ option.label }}</label>
                         </div>
                       </div>
@@ -144,7 +125,7 @@
                       <legend class="block font-medium">Category</legend>
                       <div class="space-y-6 pt-6 sm:space-y-4 sm:pt-4">
                         <div v-for="(option, optionIdx) in filters.category" :key="option.value" class="flex items-center text-base sm:text-sm">
-                          <input v-model="filterForm.category" :id="`category-${optionIdx}`" name="category[]" :value="option.value" type="radio" class="size-4 shrink-0 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" :checked="option.checked" />
+                          <input v-model="filterForm.category" :id="`category-${optionIdx}`" name="filter" :value="option.value" type="radio" class="size-4 shrink-0 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" :checked="option.checked" />
                           <label :for="`category-${optionIdx}`" class="ml-3 min-w-0 flex-1 text-gray-900">{{ option.label }}</label>
                         </div>
                       </div>
