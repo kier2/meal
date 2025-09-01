@@ -1,28 +1,22 @@
 <script setup>
   import { ref } from 'vue';
-  import MealHeader from '@/components/MealHeader.vue';
   import Footer from '@/components/FooterView.vue';
 
-  import MealsByIngredient from '@/components/MealsByIngredient.vue';
-  import MealsByCategories from '@/components/MealsByCategories.vue';
-  import MealByArea from '@/components/MealByArea.vue';
+  import MealsView from '@/components/MealsView.vue';
+  import MealsByFilter from '@/components/MealsByFilter.vue';
 
-  import { ChevronDownIcon } from '@heroicons/vue/16/solid'
-  import { BuildingOfficeIcon, CreditCardIcon, UserIcon, UsersIcon } from '@heroicons/vue/20/solid'
+  const activeFilter = ref({})
 
+  const onFilterSelected = (filter) => {
+    // console.log('Filter chosen:', filter)
+    activeFilter.value = filter
+    return activeFilter
+    // { type: "category", value: "Beef" }
+    // { type: "area", value: "Canadian" }
+    // { type: "ingredient", value: "Chicken" }
 
-  const tabs = ref([
-    { name: "By Category", key: "category", current: true },
-    { name: "By Area", key: "area", current: false },
-    { name: "By Ingredients", key: "ingredient", current: false },
-  ])
-
-  const setActiveTab = (tabKey) => {
-    tabs.value = tabs.value.map((tab) => ({
-      ...tab,
-      current: tab.key === tabKey,
-    }))
   }
+
 </script>
 <template>
   <div class="px-4 sm:px-6 md:px-10 lg:px-40 flex flex-1 justify-center py-5">
@@ -46,63 +40,16 @@
         </label>
       </div>
 
-      <!-- Desktop Tabs -->
-      <div class="hidden sm:block">
-        <div class="border-b border-gray-200 dark:border-white/10">
-          <nav class="-mb-px flex space-x-8" aria-label="Tabs">
-            <a
-              v-for="tab in tabs"
-              :key="tab.key"
-              href="#"
-              @click.prevent="setActiveTab(tab.key)"
-              :class="[
-                tab.current
-                  ? 'border-[#d57d1f] text-[#d57d1f] dark:border-[#d57d1f] dark:text-[#d57d1f]'
-                  : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:border-white/20 dark:hover:text-gray-300',
-                'group inline-flex items-center border-b-2 px-1 py-4 text-sm font-medium'
-              ]"
-            >
-              <span>{{ tab.name }}</span>
-            </a>
-          </nav>
-        </div>
-      </div>
-
       <div class="grid grid-cols-3 gap-3 p-2">
-        <MealsByCategories />
-        <MealByArea />
+        <MealsByFilter
+        @filter-selected="onFilterSelected" />
       </div>
 
       <div>
-        <MealsByIngredient />
-      </div>
-
-      <div>
-        <!-- Mobile Select -->
-        <div class="grid grid-cols-1 sm:hidden">
-        <select
-          aria-label="Select a tab"
-          class="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-2 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 dark:bg-white/5 dark:text-gray-100 dark:outline-white/10 dark:*:bg-gray-800 dark:focus:outline-indigo-500"
-          @change="setActiveTab($event.target.value)"
-        >
-          <option
-            v-for="tab in tabs"
-            :key="tab.name"
-            :value="tab.name"
-            :selected="tab.current"
-          >
-            {{ tab.name }}
-          </option>
-        </select>
-        <ChevronDownIcon
-          class="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end fill-gray-500 dark:fill-gray-400"
-          aria-hidden="true"
-        />
-        </div>
+        <MealsView
+        :activeFilter="activeFilter" />
       </div>
 
     </div>
   </div>
-
-
 </template>
