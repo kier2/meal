@@ -57,17 +57,13 @@ watch(
             leave-from="opacity-100 scale-100"
             leave-to="opacity-0 scale-95"
           >
-            <DialogPanel class="w-full max-w-4xl transform overflow-hidden rounded-lg bg-white p-6 text-left shadow-xl transition-all">
+            <DialogPanel class="w-full max-w-4xl transform overflow-hidden rounded-2xl bg-white text-left shadow-xl transition-all">
               <!-- Header -->
-              <div class="flex justify-between items-start">
+              <!-- <div class="flex justify-between items-start">
                 <div>
                   <Dialog.Title class="text-2xl font-bold text-gray-900">
                     {{ mealDetails?.strMeal || 'Loading...' }}
                   </Dialog.Title>
-                  <h3 class="font-semibold text-xl">{{ mealDetails?.strMeal }}</h3>
-                  <p class="text-gray-600 mt-1 text-sm">
-                    Category: {{ mealDetails?.strCategory || '-' }} | Area: {{ mealDetails?.strArea || '-' }}
-                  </p>
                 </div>
                 <button
                   @click="emit('close')"
@@ -75,30 +71,40 @@ watch(
                 >
                   &times;
                 </button>
-              </div>
+              </div> -->
 
               <!-- Body -->
-              <div class="mt-4">
+              <div>
                 <div v-if="isLoading" class="text-center py-6">Loading...</div>
                 <div v-else-if="mealDetails">
-                  <img
-                    :src="mealDetails.strMealThumb"
-                    :alt="mealDetails.strMeal"
-                    class="aspect-square rounded-lg object-cover h-auto"
-                  />
-                  <div class="mt-4 flex">
-                    <div>
-                      <strong>Ingredients:</strong>
+                  <div class="relative h-72 w-full">
+                    <img alt="Katsu Curry" class="absolute h-full w-full object-cover rounded-t-2xl "
+                      :src="mealDetails.strMealThumb"
+                    />
+                  </div>
 
+                  <div class="mt-4 px-6 py-3">
+
+                    <h2 class="text-4xl font-bold text-[#181511] tracking-tight">
+                      {{ mealDetails?.strMeal }}
+                    </h2>
+
+                    <div class="w-full">
+                      <strong>Ingredients:</strong>
+                      <p
+                      class="mt-4"
+                      v-for="(ingredient, index) in 20"
+                      :key="index">
+                        {{ ingredient[index] }}
+                      </p>
                     </div>
-                    <div>
+                    <div class="w-full">
                       <strong>Instructions:</strong>
                       <p class="mt-4 text-gray-700 whitespace-pre-line">
                         {{ mealDetails.strInstructions }}
                       </p>
                     </div>
                   </div>
-
                 </div>
               </div>
             </DialogPanel>
