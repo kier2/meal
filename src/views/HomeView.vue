@@ -1,6 +1,5 @@
 <script setup>
   import { ref } from 'vue';
-  import Footer from '@/components/FooterView.vue';
 
   import MealsView from '@/components/MealsView.vue';
   import MealsByFilter from '@/components/MealsByFilter.vue';
