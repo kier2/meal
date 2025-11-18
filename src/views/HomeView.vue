@@ -1,19 +1,23 @@
 <script setup>
   import { ref } from 'vue';
-
   import MealsView from '@/components/MealsView.vue';
   import MealsByFilter from '@/components/MealsByFilter.vue';
 
   const activeFilter = ref({})
+  const searchKeyword = ref()
+  const searchData = ref({})
+
 
   const onFilterSelected = (filter) => {
-    // console.log('Filter chosen:', filter)
     activeFilter.value = filter
     return activeFilter
-    // { type: "category", value: "Beef" }
-    // { type: "area", value: "Canadian" }
-    // { type: "ingredient", value: "Chicken" }
+  }
 
+  const sanitizeSearch = () => {
+    searchData.value.value = searchKeyword.value.trim()
+    searchData.value.type = 'search'
+
+    return searchData
   }
 
 </script>
@@ -32,23 +36,27 @@
               </svg>
             </div>
             <input
+              v-model="searchKeyword"
+              @keyup="sanitizeSearch"
               placeholder="Search for recipes or ingredients"
-              class="form-input flex w-full min-w-0 flex-1 overflow-hidden rounded-xl text-[#181411] bg-[#f4f2f0] h-full placeholder:text-[#897461] px-4 rounded-l-none text-base focus:outline-none"
+              class="form-input flex w-full min-w-0 flex-1 overflow-hidden rounded-xl text-[#897461] bg-[#f4f2f0] h-full placeholder:text-[#897461] px-4 rounded-l-none text-base focus:outline-none"
             />
           </div>
         </label>
       </div>
 
-      <div class="grid grid-cols-3 gap-3 p-2">
+      <div class="grid md:grid-cols-3 gap-3 p-2">
         <MealsByFilter
-        @filter-selected="onFilterSelected" />
+          @filter-selected="onFilterSelected"
+        />
       </div>
 
       <div>
         <MealsView
-        :activeFilter="activeFilter" />
+          :activeFilter="activeFilter"
+          :search-meals="searchData"
+        />
       </div>
-
     </div>
   </div>
 </template>

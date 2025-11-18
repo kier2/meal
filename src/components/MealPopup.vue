@@ -110,7 +110,7 @@ watch(
                   </div>
 
                   <div class="mt-4 px-6 py-3">
-                    <div class="flex items-center justify-between">
+                    <div class="flex md:items-center justify-between flex-col md:flex-row gap-4">
                       <div>
                         <h2 class="text-3xl font-semibold text-[#181511] tracking-tight">
                           {{ mealDetails?.strMeal }}

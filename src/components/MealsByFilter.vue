@@ -89,121 +89,122 @@ onMounted(() => {
 <template>
   <!-- Category Filter -->
   <div class="w-full">
-    <Listbox as="div" v-model="selectedCat">
-      <ListboxLabel class="block text-sm font-medium text-[#181411]">
-        <span class="sr-only">Category</span>
-      </ListboxLabel>
-      <div class="relative">
-        <ListboxButton
-          class="flex w-full cursor-pointer items-center justify-between rounded-md bg-[#f4f2f0] py-2 pl-3 pr-2 text-left text-[#181411] shadow-sm ring-1 ring-[#e0ddd9] focus:outline-none sm:text-sm"
-        >
-          <span class="flex items-center gap-2">
-            <img
-              v-if="selectedCat"
-              :src="selectedCat.strCategoryThumb"
-              alt=""
-              class="h-5 w-5 rounded-full bg-gray-200"
-            />
-            <span class="block truncate font-semibold">
-              {{ selectedCat?.strCategory || 'Category' }}
-            </span>
-          </span>
-          <ChevronDownIcon class="h-5 w-5 text-[#181411]" aria-hidden="true" />
-        </ListboxButton>
-
-        <!-- Options -->
-        <transition
-          leave-active-class="transition ease-in duration-100"
-          leave-from-class="opacity-100"
-          leave-to-class="opacity-0"
-        >
-          <ListboxOptions
-            class="absolute z-10 mt-1 max-h-56 w-full overflow-auto rounded-md bg-[#f4f2f0] py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm"
+      <Listbox as="div" v-model="selectedCat">
+        <ListboxLabel class="block text-sm font-medium text-[#181411]">
+          <span class="sr-only">Category</span>
+        </ListboxLabel>
+        <div class="relative">
+          <ListboxButton
+            class="flex w-full cursor-pointer items-center justify-between rounded-md bg-[#f4f2f0] py-2 pl-3 pr-2 text-left text-[#181411] shadow-sm ring-1 ring-[#e0ddd9] focus:outline-none sm:text-sm"
           >
-            <ListboxOption
-              as="template"
-              v-for="(meal, index) in mealByCategories"
-              :key="index"
-              :value="meal"
-              v-slot="{ active, selected }"
+            <span class="flex items-center gap-2">
+              <img
+                v-if="selectedCat"
+                :src="selectedCat.strCategoryThumb"
+                alt=""
+                class="h-5 w-5 rounded-full bg-gray-200"
+              />
+              <span class="block truncate font-semibold text-[#897461]">
+                {{ selectedCat?.strCategory || 'Category' }}
+              </span>
+            </span>
+            <ChevronDownIcon class="h-5 w-5 text-[#181411]" aria-hidden="true" />
+          </ListboxButton>
+
+          <!-- Options -->
+          <transition
+            leave-active-class="transition ease-in duration-100"
+            leave-from-class="opacity-100"
+            leave-to-class="opacity-0"
+          >
+            <ListboxOptions
+              class="absolute z-10 mt-1 max-h-56 w-full overflow-auto rounded-md bg-[#f4f2f0] py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm"
             >
-              <li
-                :class="[active ? 'bg-[#e8e5e1]' : 'text-[#181411]', 'relative cursor-pointer select-none py-2 pl-3 pr-9']"
+              <ListboxOption
+                as="template"
+                v-for="(meal, index) in mealByCategories"
+                :key="index"
+                :value="meal"
+                v-slot="{ active, selected }"
               >
-                <div class="flex items-center">
-                  <img
-                    :src="meal.strCategoryThumb"
-                    alt=""
-                    class="size-16 rounded-full object-contain"
-                  />
-                  <span
-                    :class="[selected ? 'font-semibold' : '']"
-                    class="ml-4 block"
-                  >
-                    {{ meal.strCategory }}
-                  </span>
-                </div>
-              </li>
-            </ListboxOption>
-          </ListboxOptions>
-        </transition>
-      </div>
-    </Listbox>
+                <li
+                  :class="[active ? 'bg-[#e8e5e1]' : 'text-[#181411]', 'relative cursor-pointer select-none py-2 pl-3 pr-9']"
+                >
+                  <div class="flex items-center">
+                    <img
+                      :src="meal.strCategoryThumb"
+                      alt=""
+                      class="size-16 rounded-full object-contain"
+                    />
+                    <span
+                      :class="[selected ? 'font-semibold' : '']"
+                      class="ml-4 block"
+                    >
+                      {{ meal.strCategory }}
+                    </span>
+                  </div>
+                </li>
+              </ListboxOption>
+            </ListboxOptions>
+          </transition>
+        </div>
+      </Listbox>
   </div>
 
   <!-- Area Filter -->
   <div class="w-full">
-    <Listbox as="div" v-model="selectedArea">
-      <ListboxLabel class="block text-sm font-medium text-[#181411]">
-        <span class="sr-only">Area</span>
-      </ListboxLabel>
-      <div class="relative">
-        <ListboxButton
-          class="flex w-full cursor-pointer items-center justify-between rounded-md bg-[#f4f2f0] py-2 pl-3 pr-2 text-left text-[#181411] shadow-sm ring-1 ring-[#e0ddd9] focus:outline-none sm:text-sm"
-        >
-          <span class="flex items-center gap-2">
-            <span class="block truncate font-semibold">
-              {{ selectedArea?.strArea || 'Area' }}
-            </span>
-          </span>
-          <ChevronDownIcon class="h-5 w-5 text-[#181411]" aria-hidden="true" />
-        </ListboxButton>
-
-        <!-- Options -->
-        <transition
-          leave-active-class="transition ease-in duration-100"
-          leave-from-class="opacity-100"
-          leave-to-class="opacity-0"
-        >
-          <ListboxOptions
-            class="absolute z-10 mt-1 max-h-56 w-full overflow-auto rounded-md bg-[#f4f2f0] py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm"
+      <Listbox as="div" v-model="selectedArea">
+        <ListboxLabel class="block text-sm font-medium text-[#181411]">
+          <span class="sr-only">Area</span>
+        </ListboxLabel>
+        <div class="relative">
+          <ListboxButton
+            class="flex w-full cursor-pointer items-center justify-between rounded-md bg-[#f4f2f0] py-2 pl-3 pr-2 text-left text-[#181411] shadow-sm ring-1 ring-[#e0ddd9] focus:outline-none sm:text-sm"
           >
-            <ListboxOption
-              as="template"
-              v-for="(meal, index) in mealByArea"
-              :key="index"
-              :value="meal"
-              v-slot="{ active, selected }"
+            <span class="flex items-center gap-2">
+              <span class="block truncate font-semibold text-[#897461]">
+                {{ selectedArea?.strArea || 'Area' }}
+              </span>
+            </span>
+            <ChevronDownIcon class="h-5 w-5 text-[#181411]" aria-hidden="true" />
+          </ListboxButton>
+
+          <!-- Options -->
+          <transition
+            leave-active-class="transition ease-in duration-100"
+            leave-from-class="opacity-100"
+            leave-to-class="opacity-0"
+          >
+            <ListboxOptions
+              class="absolute z-10 mt-1 max-h-56 w-full overflow-auto rounded-md bg-[#f4f2f0] py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm"
             >
-              <li
-                :class="[active ? 'bg-[#e8e5e1]' : 'text-[#181411]', 'relative cursor-pointer select-none py-2 pl-3 pr-9']"
+              <ListboxOption
+                as="template"
+                v-for="(meal, index) in mealByArea"
+                :key="index"
+                :value="meal"
+                v-slot="{ active, selected }"
               >
-                <span
-                  :class="[selected ? 'font-semibold' : '']"
-                  class="ml-1 block"
+                <li
+                  :class="[active ? 'bg-[#e8e5e1]' : 'text-[#181411]', 'relative cursor-pointer select-none py-2 pl-3 pr-9']"
                 >
-                  {{ meal.strArea }}
-                </span>
-              </li>
-            </ListboxOption>
-          </ListboxOptions>
-        </transition>
-      </div>
-    </Listbox>
+                  <span
+                    :class="[selected ? 'font-semibold' : '']"
+                    class="ml-1 block"
+                  >
+                    {{ meal.strArea }}
+                  </span>
+                </li>
+              </ListboxOption>
+            </ListboxOptions>
+          </transition>
+        </div>
+      </Listbox>
   </div>
 
   <!-- Ingredient Filter -->
   <div class="w-full">
+
     <Listbox as="div" v-model="selectedIng">
       <ListboxLabel class="block text-sm font-medium text-[#181411]">
         <span class="sr-only">Ingredient</span>
@@ -213,7 +214,7 @@ onMounted(() => {
           class="flex w-full cursor-pointer items-center justify-between rounded-md bg-[#f4f2f0] py-2 pl-3 pr-2 text-left text-[#181411] shadow-sm ring-1 ring-[#e0ddd9] focus:outline-none sm:text-sm"
         >
           <span class="flex items-center gap-2">
-            <span class="block truncate font-semibold">
+            <span class="block truncate font-semibold text-[#897461]">
               {{ selectedIng?.strIngredient || 'Ingredient' }}
             </span>
           </span>
