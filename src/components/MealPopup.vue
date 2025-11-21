@@ -1,6 +1,6 @@
 <script setup>
 import { ref, watch } from 'vue'
-import { Dialog, DialogPanel, TransitionChild, TransitionRoot } from '@headlessui/vue'
+import { Dialog, DialogPanel, TransitionChild, TransitionRoot } from '@headlessui/vue';
 import api from '@/api/axios'
 import { MapPinIcon, ShareIcon, HeartIcon } from '@heroicons/vue/16/solid'
 import { HeartIcon as HeartIconOutline  } from '@heroicons/vue/24/outline'
@@ -16,32 +16,42 @@ const mealDetails = ref(null);
 const isLoading = ref(false);
 const ingredients = ref([]);
 
-const isLike = ref(false);
+const likedMeals = ref({});
 const mealData = ref({});
 
 const showShare = ref(false);
 const currentUrl = window.location.href;
 
-const setLikeMeal = async () => {
+const toggleLike = (mealId, meal) => {
+  likedMeals.value[mealId] = !likedMeals.value[mealId];
 
-  const liked = isLike.value = !isLike.value
-  try {
-    if(liked){
-      const res = await saveLikedMeal;
-    } else{
-      const res = await removeLikedMeal;
-    }
-  } catch(err){
-    console.log('Error:', err)
+  if(likedMeals.value[mealId]) {
+    saveLikedMeal(mealId, meal);
+  } else{
+    removeLikedMeal(mealId);
   }
+};
 
+const saveLikedMeal = async (mealId, meal) => {
+  // Get the existing liked meals (if any)
+  let likedMeals = JSON.parse(localStorage.getItem('mealData')) || [];
+  // Check if this meal is already saved
+  const exists = JSON.parse(localStorage.getItem('mealData')) || [];
+  if (!exists) {
+    likedMeals.push({ mealId, meal });
+    localStorage.setItem('mealData', JSON.stringify(likedMeals));
+  }
+}
+const removeLikedMeal = async (mealId) => {
+  let likedMeals = JSON.parse(localStorage.getItem('mealData')) || [];
+  // Remove the meal with the given ID
+  likedMeals = likedMeals.filter((m) => m.mealId !== mealId);
+  localStorage.setItem('mealData', JSON.stringify(likedMeals));
 }
 
-const saveLikedMeal = () => {
-
-}
-const removeLikedMeal = () => {
-
+const fetchMeal = (mealId) => {
+  let likedMeals = JSON.parse(localStorage.getItem('mealData')) || [];
+  return likedMeals.find((m) => m.mealId === mealId);
 }
 
 watch(
@@ -50,32 +60,30 @@ watch(
     if (newMeal) {
       isLoading.value = true
       try {
-        const response = await api.get(`/search.php?s=${newMeal}`)
-        const meal = response.data.meals?.[0] || null
-        console.log(meal)
-        mealDetails.value = meal
-
-        mealData.value.id = meal.idMeal
-        mealData.value.meal = meal.strMeal
+        const response = await api.get(`/search.php?s=${newMeal}`);
+        const meal = response.data.meals?.[0] || null;
+        // console.log(meal);
+        mealDetails.value = meal;
+        // fetchMeal()
 
         if (meal) {
           // Extract ingredients + measurements into an array
-          const ingArr = []
+          const ingArr = [];
           for (let i = 1; i <= 20; i++) {
-            const ingredient = meal[`strIngredient${i}`]
-            const measure = meal[`strMeasure${i}`]
+            const ingredient = meal[`strIngredient${i}`];
+            const measure = meal[`strMeasure${i}`];
             if (ingredient && ingredient.trim() !== '') {
-              ingArr.push(`${measure} ${ingredient}`.trim())
+              ingArr.push(`${measure} ${ingredient}`.trim());
             }
           }
-          ingredients.value = ingArr
+          ingredients.value = ingArr;
         } else {
-          ingredients.value = []
+          ingredients.value = [];
         }
       } catch (err) {
-        console.error(err)
+        console.error(err);
       } finally {
-        isLoading.value = false
+        isLoading.value = false;
       }
     }
   }
@@ -209,15 +217,15 @@ watch(
                         </div>
 
                           <button
-                          @click="setLikeMeal"
+                          @click="toggleLike(mealDetails.idMeal, mealDetails.strMeal)"
                           class="transition"
-                          type="button">
-                            <HeartIcon v-if="isLike"
+                          type="button"
+                          >
+                            <HeartIcon v-if="likedMeals[mealDetails.idMeal]"
                             class="size-7 text-[#e48a04]" />
                             <HeartIconOutline v-else
                             class="size-7 text-gray-700" />
                           </button>
-                      
                       </div>
                     </div>
                     <!-- Category + Area -->
