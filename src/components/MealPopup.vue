@@ -5,19 +5,44 @@ import api from '@/api/axios'
 import { MapPinIcon, ShareIcon, HeartIcon } from '@heroicons/vue/16/solid'
 import { HeartIcon as HeartIconOutline  } from '@heroicons/vue/24/outline'
 
-
 const props = defineProps({
   open: Boolean,
   mealSelected: String
 })
-const emit = defineEmits(['close'])
 
-const mealDetails = ref(null)
-const isLoading = ref(false)
-const ingredients = ref([])
+const emit = defineEmits(['close']);
+
+const mealDetails = ref(null);
+const isLoading = ref(false);
+const ingredients = ref([]);
+
+const isLike = ref(false);
+const mealData = ref({});
 
 const showShare = ref(false);
 const currentUrl = window.location.href;
+
+const setLikeMeal = async () => {
+
+  const liked = isLike.value = !isLike.value
+  try {
+    if(liked){
+      const res = await saveLikedMeal;
+    } else{
+      const res = await removeLikedMeal;
+    }
+  } catch(err){
+    console.log('Error:', err)
+  }
+
+}
+
+const saveLikedMeal = () => {
+
+}
+const removeLikedMeal = () => {
+
+}
 
 watch(
   () => props.mealSelected,
@@ -27,7 +52,11 @@ watch(
       try {
         const response = await api.get(`/search.php?s=${newMeal}`)
         const meal = response.data.meals?.[0] || null
+        console.log(meal)
         mealDetails.value = meal
+
+        mealData.value.id = meal.idMeal
+        mealData.value.meal = meal.strMeal
 
         if (meal) {
           // Extract ingredients + measurements into an array
@@ -179,12 +208,16 @@ watch(
                           </div>
                         </div>
 
-                        <button
-                        class="transition"
-                          >
-                          <HeartIconOutline class="size-7 text-gray-700" />
-                          <!-- <HeartIcon class="size-7" /> -->
-                        </button>
+                          <button
+                          @click="setLikeMeal"
+                          class="transition"
+                          type="button">
+                            <HeartIcon v-if="isLike"
+                            class="size-7 text-[#e48a04]" />
+                            <HeartIconOutline v-else
+                            class="size-7 text-gray-700" />
+                          </button>
+                      
                       </div>
                     </div>
                     <!-- Category + Area -->
