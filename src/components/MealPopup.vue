@@ -17,7 +17,6 @@ const isLoading = ref(false);
 const ingredients = ref([]);
 
 const likedMeals = ref({});
-const mealData = ref({});
 
 const showShare = ref(false);
 const currentUrl = window.location.href;
@@ -33,26 +32,25 @@ const toggleLike = (mealId, meal) => {
 };
 
 const saveLikedMeal = async (mealId, meal) => {
-  // Get the existing liked meals (if any)
-  let likedMeals = JSON.parse(localStorage.getItem('mealData')) || [];
-  // Check if this meal is already saved
-  const exists = JSON.parse(localStorage.getItem('mealData')) || [];
+  let stored = JSON.parse(localStorage.getItem('mealData')) || [];
+
+  const exists = stored.find((m) => m.mealId === mealId);
   if (!exists) {
-    likedMeals.push({ mealId, meal });
-    localStorage.setItem('mealData', JSON.stringify(likedMeals));
+    stored.push({ mealId, meal });
+    localStorage.setItem('mealData', JSON.stringify(stored));
   }
 }
 const removeLikedMeal = async (mealId) => {
-  let likedMeals = JSON.parse(localStorage.getItem('mealData')) || [];
-  // Remove the meal with the given ID
-  likedMeals = likedMeals.filter((m) => m.mealId !== mealId);
-  localStorage.setItem('mealData', JSON.stringify(likedMeals));
+  let stored = JSON.parse(localStorage.getItem('mealData')) || [];
+
+  stored = stored.filter((m) => m.mealId !== mealId);
+  localStorage.setItem('mealData', JSON.stringify(stored));
 }
 
-const fetchMeal = (mealId) => {
-  let likedMeals = JSON.parse(localStorage.getItem('mealData')) || [];
-  return likedMeals.find((m) => m.mealId === mealId);
-}
+const isMealLiked = (mealId) => {
+  const stored = JSON.parse(localStorage.getItem("mealData")) || [];
+  return stored.some((m) => m.mealId === mealId);
+};
 
 watch(
   () => props.mealSelected,
@@ -64,10 +62,8 @@ watch(
         const meal = response.data.meals?.[0] || null;
         // console.log(meal);
         mealDetails.value = meal;
-        // fetchMeal()
 
         if (meal) {
-          // Extract ingredients + measurements into an array
           const ingArr = [];
           for (let i = 1; i <= 20; i++) {
             const ingredient = meal[`strIngredient${i}`];
@@ -77,6 +73,7 @@ watch(
             }
           }
           ingredients.value = ingArr;
+          likedMeals.value[meal.idMeal] = isMealLiked(meal.idMeal);
         } else {
           ingredients.value = [];
         }
@@ -221,10 +218,12 @@ watch(
                           class="transition"
                           type="button"
                           >
-                            <HeartIcon v-if="likedMeals[mealDetails.idMeal]"
-                            class="size-7 text-[#e48a04]" />
-                            <HeartIconOutline v-else
-                            class="size-7 text-gray-700" />
+                            <HeartIcon
+                            v-if="likedMeals[mealDetails.idMeal]" class="size-7 text-[#e48a04]"
+                            />
+                            <HeartIconOutline
+                            v-else class="size-7 text-gray-700"
+                            />
                           </button>
                       </div>
                     </div>

@@ -59,6 +59,7 @@ const fetchMeals = async (filter) => {
 
     const response = await api.get(endpoint)
     meals.value = response.data.meals || []
+    console.log(meals.value)
     currentPage.value = 1
   } catch (error) {
     console.error('Failed to fetch meals:', error)
@@ -124,6 +125,12 @@ watch(
         </div>
       </div>
     </div>
+
+    <div
+      v-if="meals.length == 0"
+      class="w-full py-6 h-[30vh] flex items-center justify-center">
+      <h2 class="text-6xl font-semibold text-center uppercase text-[#d57d1f]">404 not Found</h2>
+    </div>
   </div>
 
   <div v-if="totalPages > 1" class="flex justify-center items-center my-8 space-x-2">
@@ -155,7 +162,7 @@ watch(
         >
             Next &rarr;
         </button>
-    </div>
+  </div>
 
   <MealPopup
     :open="isModalOpen"

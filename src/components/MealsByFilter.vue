@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, watch } from 'vue';
+import { ref, onMounted, watch, computed } from 'vue';
 import api from '@/api/axios';
 import {
   Listbox,
@@ -20,6 +20,7 @@ const mealByIngredients = ref([])
 const selectedCat = ref(null)
 const selectedArea = ref(null)
 const selectedIng = ref(null)
+const visibleCount = ref(9);
 
 watch(selectedCat, (val) => {
   if (val) {
@@ -79,6 +80,18 @@ const getMealByIngredient = async () => {
   }
 }
 
+const handleScroll = (e) => {
+  const el = e.target;
+  const nearBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 10;
+  if(nearBottom && visibleCount.value < mealByIngredients.value.length) {
+    visibleCount.value += 9;
+  }
+};
+
+const visibleMeals = computed(() =>
+  mealByIngredients.value.slice(0, visibleCount.value)
+)
+
 onMounted(() => {
   getMealByCategories()
   getMealByArea()
@@ -110,7 +123,6 @@ onMounted(() => {
             </span>
             <ChevronDownIcon class="h-5 w-5 text-[#181411]" aria-hidden="true" />
           </ListboxButton>
-
           <!-- Options -->
           <transition
             leave-active-class="transition ease-in duration-100"
@@ -168,7 +180,6 @@ onMounted(() => {
             </span>
             <ChevronDownIcon class="h-5 w-5 text-[#181411]" aria-hidden="true" />
           </ListboxButton>
-
           <!-- Options -->
           <transition
             leave-active-class="transition ease-in duration-100"
@@ -204,11 +215,11 @@ onMounted(() => {
 
   <!-- Ingredient Filter -->
   <div class="w-full">
-
     <Listbox as="div" v-model="selectedIng">
       <ListboxLabel class="block text-sm font-medium text-[#181411]">
         <span class="sr-only">Ingredient</span>
       </ListboxLabel>
+
       <div class="relative">
         <ListboxButton
           class="flex w-full cursor-pointer items-center justify-between rounded-md bg-[#f4f2f0] py-2 pl-3 pr-2 text-left text-[#181411] shadow-sm ring-1 ring-[#e0ddd9] focus:outline-none sm:text-sm"
@@ -228,11 +239,12 @@ onMounted(() => {
           leave-to-class="opacity-0"
         >
           <ListboxOptions
+            @scroll="handleScroll"
             class="absolute z-10 mt-1 max-h-56 w-full overflow-auto rounded-md bg-[#f4f2f0] py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm"
           >
             <ListboxOption
               as="template"
-              v-for="(meal, index) in mealByIngredients"
+              v-for="(meal, index) in visibleMeals"
               :key="index"
               :value="meal"
               v-slot="{ active, selected }"
@@ -248,6 +260,12 @@ onMounted(() => {
                 </span>
               </li>
             </ListboxOption>
+            <div
+              v-if="visibleCount < mealByIngredients.length"
+              class="py-2 text-center text-sm text-[#897461]"
+            >
+              Loading more...
+            </div>
           </ListboxOptions>
         </transition>
       </div>

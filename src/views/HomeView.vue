@@ -22,8 +22,8 @@
 
 </script>
 <template>
-  <div class="px-4 sm:px-6 md:px-10 lg:px-40 flex flex-1 justify-center py-5">
-    <div class="layout-content-container flex flex-col w-full max-w-full lg:max-w-[960px] flex-1">
+  <div class="flex flex-1 justify-center py-12 w-full">
+    <div class="layout-content-container flex flex-col w-full max-w-full flex-1">
       <!-- Search Bar -->
       <div class="py-3 px-4 sm:px-0">
         <label class="flex flex-col min-w-40 h-12 w-full">
