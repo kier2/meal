@@ -21,22 +21,22 @@ const likedMeals = ref({});
 const showShare = ref(false);
 const currentUrl = window.location.href;
 
-const toggleLike = (mealId, meal) => {
+const toggleLike = (mealId, meal, mealImg) => {
   likedMeals.value[mealId] = !likedMeals.value[mealId];
 
   if(likedMeals.value[mealId]) {
-    saveLikedMeal(mealId, meal);
+    saveLikedMeal(mealId, meal, mealImg);
   } else{
     removeLikedMeal(mealId);
   }
 };
 
-const saveLikedMeal = async (mealId, meal) => {
+const saveLikedMeal = async (mealId, meal, mealImg) => {
   let stored = JSON.parse(localStorage.getItem('mealData')) || [];
 
   const exists = stored.find((m) => m.mealId === mealId);
   if (!exists) {
-    stored.push({ mealId, meal });
+    stored.push({ mealId, meal, mealImg });
     localStorage.setItem('mealData', JSON.stringify(stored));
   }
 }
@@ -214,7 +214,7 @@ watch(
                         </div>
 
                           <button
-                          @click="toggleLike(mealDetails.idMeal, mealDetails.strMeal)"
+                          @click="toggleLike(mealDetails.idMeal, mealDetails.strMeal, mealDetails.strMealThumb)"
                           class="transition"
                           type="button"
                           >

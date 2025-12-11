@@ -36,7 +36,7 @@ const paginatedMeals = computed(() => {
 
 const goToPage = (page) => {
     if (page >= 1 && page <= totalPages.value) {
-        currentPage.value = page
+      currentPage.value = page
     }
 }
 
@@ -156,11 +156,11 @@ watch(
         </button>
 
         <button
-            @click="goToPage(currentPage + 1)"
-            :disabled="currentPage === totalPages"
-            class="px-4 py-2 text-sm font-medium border rounded-md"
+          @click="goToPage(currentPage + 1)"
+          :disabled="currentPage === totalPages"
+          class="px-4 py-2 text-sm font-medium border rounded-md"
         >
-            Next &rarr;
+          Next &rarr;
         </button>
   </div>
 
